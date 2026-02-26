@@ -1,19 +1,11 @@
-<h1>#<%= @todo_list.id %> | <%= @todo_list.name %></h1>
+<%= turbo_frame_tag "todo_list_items_#{@todo_list.id}" do %>
+  <div class="items-list" id="todo_items_<%= @todo_list.id %>">
+    <% @todo_list.todo_items.each do |todo_item| %>
+      <%= render todo_item %>
+    <% end %>
+  </div>
 
-<%= link_to 'Edit', edit_todo_list_path(@todo_list) %>
-<%= button_to 'Delete', todo_list_path(@todo_list), method: :delete,
-      data: { turbo_confirm: 'Are you sure?' } %>
-
-<h2>Items</h2>
-
-<%= turbo_frame_tag "new_todo_item" do %>
-  <%= link_to 'Add Item', new_todo_list_todo_item_path(@todo_list) %>
-<% end %>
-
-<div id="todo_items">
-  <% @todo_list.todo_items.each do |todo_item| %>
-    <%= render todo_item %>
+  <%= turbo_frame_tag "new_todo_item_#{@todo_list.id}" do %>
+    <%= link_to "+ Add Item", new_todo_list_todo_item_path(@todo_list), class: "add-item-trigger" %>
   <% end %>
-</div>
-
-<%= link_to 'Back', todo_lists_path %>
+<% end %>

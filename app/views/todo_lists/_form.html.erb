@@ -1,18 +1,18 @@
 <%= form_with model: todo_list do |form| %>
   <% if todo_list.errors.any? %>
-    <div>
+    <div class="field-errors">
       <% todo_list.errors.full_messages.each do |message| %>
         <p><%= message %></p>
       <% end %>
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :name %>
-    <%= form.text_field :name %>
-  </div>
-
-  <div>
-    <%= form.submit %>
+  <div class="inline-form">
+    <div class="inline-form__field">
+      <%= form.text_field :name, placeholder: "List name…" %>
+    </div>
+    <div class="inline-form__actions">
+      <%= form.submit "Save", class: "btn btn--primary" %>
+    </div>
   </div>
 <% end %>
