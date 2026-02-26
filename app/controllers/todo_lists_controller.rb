@@ -3,7 +3,7 @@ class TodoListsController < ApplicationController
 
   # GET /todolists
   def index
-    @todo_lists = TodoList.all
+    @todo_lists = TodoList.includes(:todo_items)
 
     respond_to :html
   end
@@ -24,7 +24,8 @@ class TodoListsController < ApplicationController
         format.turbo_stream do
           render turbo_stream: [
             turbo_stream.append("todo_lists", partial: "todo_list", locals: { todo_list: @todo_list }),
-            turbo_stream.update("new_todo_list") { link_to 'Add Todo List', new_todo_list_path }
+            turbo_stream.update("new_todo_list", partial: "todo_lists/new_list_trigger"),
+            toast_stream("List \"#{@todo_list.name}\" created")
           ]
         end
         format.html { redirect_to todo_list_path(@todo_list) }
@@ -49,7 +50,10 @@ class TodoListsController < ApplicationController
     if @todo_list.update(todo_list_params)
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: turbo_stream.replace(@todo_list, partial: "todo_list", locals: { todo_list: @todo_list })
+          render turbo_stream: [
+            turbo_stream.replace(@todo_list, partial: "todo_list", locals: { todo_list: @todo_list }),
+            toast_stream("List \"#{@todo_list.name}\" updated")
+          ]
         end
         format.html { redirect_to todo_list_path(@todo_list) }
       end
@@ -60,11 +64,15 @@ class TodoListsController < ApplicationController
 
   # DELETE /todolists/:id
   def destroy
+    name = @todo_list.name
     @todo_list.destroy
 
     respond_to do |format|
       format.turbo_stream do
-        render turbo_stream: turbo_stream.remove(@todo_list)
+        render turbo_stream: [
+          turbo_stream.remove(@todo_list),
+          toast_stream("List \"#{name}\" deleted", type: :error)
+        ]
       end
       format.html { redirect_to todo_lists_path }
     end
@@ -73,7 +81,7 @@ class TodoListsController < ApplicationController
   private
 
   def set_todo_list
-    @todo_list = TodoList.find(params[:id])
+    @todo_list = TodoList.includes(:todo_items).find(params[:id])
   end
 
   def todo_list_params

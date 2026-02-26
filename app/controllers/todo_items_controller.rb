@@ -14,11 +14,16 @@ class TodoItemsController < ApplicationController
     @todo_item = @todo_list.todo_items.new(todo_item_params)
 
     if @todo_item.save
+      @todo_list = TodoList.includes(:todo_items).find(@todo_list.id)
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: [
-            turbo_stream.append("todo_items", partial: "todo_items/todo_item", locals: { todo_item: @todo_item }),
-            turbo_stream.update("new_todo_item") { "" }
+            turbo_stream.append("todo_items_#{@todo_list.id}", partial: "todo_items/todo_item", locals: { todo_item: @todo_item }),
+            turbo_stream.update("new_todo_item_#{@todo_list.id}") do
+              helpers.link_to "+ Add Item", helpers.new_todo_list_todo_item_path(@todo_list), class: "add-item-trigger"
+            end,
+            turbo_stream.replace("todo_list_header_#{@todo_list.id}", partial: "todo_lists/todo_list_header", locals: { todo_list: @todo_list }),
+            toast_stream("\"#{@todo_item.name}\" added")
           ]
         end
         format.html { redirect_to todo_list_path(@todo_list) }
@@ -30,9 +35,20 @@ class TodoItemsController < ApplicationController
 
   def update
     if @todo_item.update(todo_item_params)
+      @todo_list = TodoList.includes(:todo_items).find(@todo_list.id)
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: turbo_stream.replace(@todo_item, partial: "todo_items/todo_item", locals: { todo_item: @todo_item })
+          completed_changed = @todo_item.saved_change_to_completed?
+          message = if completed_changed
+            @todo_item.completed? ? "\"#{@todo_item.name}\" completed" : "\"#{@todo_item.name}\" marked as pending"
+          else
+            "\"#{@todo_item.name}\" updated"
+          end
+          render turbo_stream: [
+            turbo_stream.replace(@todo_item, partial: "todo_items/todo_item", locals: { todo_item: @todo_item }),
+            turbo_stream.replace("todo_list_header_#{@todo_list.id}", partial: "todo_lists/todo_list_header", locals: { todo_list: @todo_list }),
+            toast_stream(message)
+          ]
         end
         format.html { redirect_to todo_list_path(@todo_list) }
       end
@@ -43,10 +59,16 @@ class TodoItemsController < ApplicationController
 
   def destroy
     @todo_item.destroy
+    @todo_list = TodoList.includes(:todo_items).find(@todo_list.id)
 
     respond_to do |format|
       format.turbo_stream do
-        render turbo_stream: turbo_stream.remove(@todo_item)
+        item_name = @todo_item.name
+        render turbo_stream: [
+          turbo_stream.remove(@todo_item),
+          turbo_stream.replace("todo_list_header_#{@todo_list.id}", partial: "todo_lists/todo_list_header", locals: { todo_list: @todo_list }),
+          toast_stream("\"#{item_name}\" deleted", type: :error)
+        ]
       end
       format.html { redirect_to todo_list_path(@todo_list) }
     end

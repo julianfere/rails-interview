@@ -13,6 +13,9 @@
   </head>
 
   <body>
-    <%= yield %>
+    <div id="toast_container" class="toast-container" aria-live="polite"></div>
+    <div class="page">
+      <%= yield %>
+    </div>
   </body>
 </html>
