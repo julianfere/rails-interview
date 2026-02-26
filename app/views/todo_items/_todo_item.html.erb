@@ -1,0 +1,8 @@
+<%= turbo_frame_tag dom_id(todo_item) do %>
+  <div>
+    #<%= todo_item.id %> | <%= todo_item.name %> | <%= todo_item.completed ? 'Completed' : 'Pending' %>
+    <%= link_to 'Edit', edit_todo_list_todo_item_path(todo_item.todo_list_id, todo_item) %>
+    <%= button_to 'Delete', todo_list_todo_item_path(todo_item.todo_list_id, todo_item), method: :delete,
+          data: { turbo_confirm: 'Are you sure?' } %>
+  </div>
+<% end %>

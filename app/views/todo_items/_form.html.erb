@@ -1,0 +1,23 @@
+<%= form_with model: [todo_list, todo_item] do |form| %>
+  <% if todo_item.errors.any? %>
+    <div>
+      <% todo_item.errors.full_messages.each do |message| %>
+        <p><%= message %></p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.label :completed %>
+    <%= form.check_box :completed %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

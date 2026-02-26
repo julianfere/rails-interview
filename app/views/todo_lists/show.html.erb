@@ -6,11 +6,13 @@
 
 <h2>Items</h2>
 
-<div>
-  <% @todo_list.todo_items.each do |item| %>
-    <div>
-      #<%= item.id %> | <%= item.name %> | <%= item.completed ? 'Completed' : 'Pending' %>
-    </div>
+<%= turbo_frame_tag "new_todo_item" do %>
+  <%= link_to 'Add Item', new_todo_list_todo_item_path(@todo_list) %>
+<% end %>
+
+<div id="todo_items">
+  <% @todo_list.todo_items.each do |todo_item| %>
+    <%= render todo_item %>
   <% end %>
 </div>
 
