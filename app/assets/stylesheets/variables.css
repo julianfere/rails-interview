@@ -1,0 +1,55 @@
+:root {
+  /* Color palette */
+  --color-bg:            #0f1117;
+  --color-surface:       #1a1d27;
+  --color-surface-hover: #21253a;
+  --color-border:        #2e3347;
+  --color-border-subtle: #1e2235;
+  --color-text-primary:  #e8eaf0;
+  --color-text-muted:    #7c8299;
+  --color-text-disabled: #464c63;
+  --color-accent:        #6c8ef5;
+  --color-accent-dim:    #3b4f9e;
+  --color-success:       #4caf79;
+  --color-danger:        #e05252;
+  --color-danger-dim:    #7a2020;
+
+  /* Spacing scale (4px base) */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* Typography */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --text-xs:   0.75rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.25rem;
+  --text-2xl:  1.5rem;
+  --fw-normal: 400;
+  --fw-medium: 500;
+  --fw-semi:   600;
+  --fw-bold:   700;
+  --leading-normal: 1.5;
+
+  /* Shape */
+  --radius-sm: 4px;
+  --radius:    8px;
+  --radius-lg: 12px;
+
+  /* Motion */
+  --duration-fast:   120ms;
+  --duration-normal: 220ms;
+  --duration-slow:   380ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Shadows */
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.4), 0 4px 16px rgba(0,0,0,0.3);
+}
