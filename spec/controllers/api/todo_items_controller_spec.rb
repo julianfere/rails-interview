@@ -10,20 +10,20 @@ describe Api::TodoItemsController do
     context 'when format is HTML' do
       it 'raises a routing error' do
         expect {
-          get :index
+          get :index, params: { todo_list_id: todo_list.id }
         }.to raise_error(ActionController::RoutingError, 'Not supported format')
       end
     end
 
     context 'when format is JSON' do
       it 'returns a success code' do
-        get :index, format: :json
+        get :index, params: { todo_list_id: todo_list.id }, format: :json
 
         expect(response.status).to eq(200)
       end
 
       it 'includes todo item records' do
-        get :index, format: :json
+        get :index, params: { todo_list_id: todo_list.id }, format: :json
 
         todo_items = JSON.parse(response.body)
 
@@ -44,13 +44,13 @@ describe Api::TodoItemsController do
     let!(:todo_item) { TodoItem.create(name: 'Create a new RoR project', todo_list: todo_list) }
 
     it 'returns a success code' do
-      get :show, params: { id: todo_item.id }, format: :json
+      get :show, params: { todo_list_id: todo_list.id, id: todo_item.id }, format: :json
 
       expect(response.status).to eq(200)
     end
 
     it 'returns the requested record' do
-      get :show, params: { id: todo_item.id }, format: :json
+      get :show, params: { todo_list_id: todo_list.id, id: todo_item.id }, format: :json
 
       returned_todo_item = JSON.parse(response.body)
 
@@ -70,10 +70,10 @@ describe Api::TodoItemsController do
     context 'with valid parameters' do
       let(:valid_params) do
         {
+          todo_list_id: todo_list.id,
           todo_item: {
             name: 'Create a new RoR project',
-            completed: false,
-            todo_list_id: todo_list.id
+            completed: false
           }
         }
       end
@@ -93,7 +93,7 @@ describe Api::TodoItemsController do
           expect(created_todo_item.keys).to match_array(['id', 'name', 'completed', 'todo_list_id'])
           expect(created_todo_item['name']).to eq(valid_params[:todo_item][:name])
           expect(created_todo_item['completed']).to eq(valid_params[:todo_item][:completed])
-          expect(created_todo_item['todo_list_id']).to eq(valid_params[:todo_item][:todo_list_id])
+          expect(created_todo_item['todo_list_id']).to eq(todo_list.id)
         end
       end
     end
@@ -101,10 +101,10 @@ describe Api::TodoItemsController do
     context 'with invalid parameters' do
       let(:invalid_params) do
         {
+          todo_list_id: todo_list.id,
           todo_item: {
             name: '',
-            completed: false,
-            todo_list_id: todo_list.id
+            completed: false
           }
         }
       end
@@ -133,11 +133,11 @@ describe Api::TodoItemsController do
     context 'with valid parameters' do
       let(:valid_params) do
         {
+          todo_list_id: todo_list.id,
           id: todo_item.id,
           todo_item: {
             name: 'Create a new RoR project',
-            completed: true,
-            todo_list_id: todo_list.id
+            completed: true
           }
         }
       end
@@ -158,7 +158,7 @@ describe Api::TodoItemsController do
           expect(updated_todo_item['id']).to eq(todo_item.id)
           expect(updated_todo_item['name']).to eq(valid_params[:todo_item][:name])
           expect(updated_todo_item['completed']).to eq(valid_params[:todo_item][:completed])
-          expect(updated_todo_item['todo_list_id']).to eq(valid_params[:todo_item][:todo_list_id])
+          expect(updated_todo_item['todo_list_id']).to eq(todo_list.id)
         end
       end
     end
@@ -166,11 +166,11 @@ describe Api::TodoItemsController do
     context 'with invalid parameters' do
       let(:invalid_params) do
         {
+          todo_list_id: todo_list.id,
           id: todo_item.id,
           todo_item: {
             name: '',
-            completed: true,
-            todo_list_id: todo_list.id
+            completed: true
           }
         }
       end
@@ -198,12 +198,12 @@ describe Api::TodoItemsController do
 
     it 'deletes the record' do
       expect {
-        delete :destroy, params: { id: todo_item.id }, format: :json
+        delete :destroy, params: { todo_list_id: todo_list.id, id: todo_item.id }, format: :json
       }.to change(TodoItem, :count).by(-1)
     end
 
     it 'returns the deleted record' do
-      delete :destroy, params: { id: todo_item.id }, format: :json
+      delete :destroy, params: { todo_list_id: todo_list.id, id: todo_item.id }, format: :json
 
       deleted_todo_item = JSON.parse(response.body)
 
