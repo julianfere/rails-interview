@@ -1,0 +1,17 @@
+<h1>#<%= @todo_list.id %> | <%= @todo_list.name %></h1>
+
+<%= link_to 'Edit', edit_todo_list_path(@todo_list) %>
+<%= button_to 'Delete', todo_list_path(@todo_list), method: :delete,
+      data: { turbo_confirm: 'Are you sure?' } %>
+
+<h2>Items</h2>
+
+<div>
+  <% @todo_list.todo_items.each do |item| %>
+    <div>
+      #<%= item.id %> | <%= item.name %> | <%= item.completed ? 'Completed' : 'Pending' %>
+    </div>
+  <% end %>
+</div>
+
+<%= link_to 'Back', todo_lists_path %>

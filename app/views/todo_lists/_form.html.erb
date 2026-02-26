@@ -1,0 +1,18 @@
+<%= form_with model: todo_list do |form| %>
+  <% if todo_list.errors.any? %>
+    <div>
+      <% todo_list.errors.full_messages.each do |message| %>
+        <p><%= message %></p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
