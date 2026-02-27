@@ -1,12 +1,9 @@
 <header class="page-header">
   <h1 class="page-header__title">Todo<span>Flow</span></h1>
-</header>
-
-<div class="new-list-area">
   <%= turbo_frame_tag "new_todo_list" do %>
     <%= render "new_list_trigger" %>
   <% end %>
-</div>
+</header>
 
 <div id="todo_lists" class="card-list">
   <%= render "todo_list_collection", todo_lists: @todo_lists %>

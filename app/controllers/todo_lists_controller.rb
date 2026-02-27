@@ -1,5 +1,5 @@
 class TodoListsController < ApplicationController
-  before_action :set_todo_list, only: %i[show edit update destroy]
+  before_action :set_todo_list, only: %i[show edit update destroy complete_all]
 
   LISTS_PER_PAGE = 10
 
@@ -61,7 +61,7 @@ class TodoListsController < ApplicationController
 
   # GET /todolists/:id
   def show
-    @pagy, @todo_items = pagy(@todo_list.todo_items.order(:id), items: 10)
+    @pagy, @todo_items = pagy(@todo_list.todo_items.order(completed: :asc, id: :asc), items: 10)
 
     respond_to :html
   end
@@ -85,6 +85,33 @@ class TodoListsController < ApplicationController
       end
     else
       render :edit, status: :unprocessable_entity
+    end
+  end
+
+  # POST /todolists/:id/complete_all
+  def complete_all
+    pending_count = @todo_list.todo_items.where(completed: false).count
+
+    if pending_count > 0
+      CompleteAllItemsJob.perform_later(@todo_list.id)
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace(
+              "todo_list_header_#{@todo_list.id}",
+              partial: "todo_lists/todo_list_header",
+              locals: { todo_list: @todo_list, completing: true }
+            ),
+            toast_stream("Completing #{pending_count} items in background…", type: :info)
+          ]
+        end
+      end
+    else
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: toast_stream("All items already completed", type: :info)
+        end
+      end
     end
   end
 

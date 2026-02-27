@@ -9,7 +9,7 @@ module Api
     # GET /api/todolists/:todo_list_id/todoitems
     def index
       per_page = [params.fetch(:per_page, ITEMS_PER_PAGE).to_i, 100].min
-      @pagy, @todo_items = pagy(@todo_list.todo_items.order(:id), items: per_page)
+      @pagy, @todo_items = pagy(@todo_list.todo_items.order(completed: :asc, id: :asc), items: per_page)
 
       respond_to do |format|
         format.json do

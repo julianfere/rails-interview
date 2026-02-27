@@ -1,5 +1,7 @@
-<% total = todo_list.todo_items.size
+<% completing ||= false
+   total = todo_list.todo_items.size
    done  = todo_list.todo_items.count(&:completed)
+   pct   = total > 0 ? (done * 100 / total) : 0
    state = if total == 0 then :empty
            elsif done == total then :complete
            elsif done > 0     then :partial
@@ -7,8 +9,7 @@
            end %>
 <%= turbo_frame_tag "todo_list_header_#{todo_list.id}" do %>
   <div class="card__header" data-action="click->collapsible#toggle">
-    <div class="card__header-left">
-      <span class="card__chevron">&#9654;</span>
+    <div class="card__header-top">
       <span class="list-status list-status--<%= state %>">
         <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
@@ -20,15 +21,38 @@
         </svg>
       </span>
       <span class="card__title"><%= todo_list.name %></span>
-      <% if total > 0 %>
-        <span class="card__count">(<%= done %>/<%= total %>)</span>
-      <% end %>
     </div>
-    <div class="card__actions">
+    <% if total > 0 %>
+      <span class="card__count"><%= done %>/<%= total %> done</span>
+    <% end %>
+  </div>
+
+  <% if total > 0 %>
+    <div class="card__progress">
+      <div class="card__progress-track">
+        <div class="card__progress-bar card__progress-bar--<%= state %>"
+             style="width: <%= pct %>%"></div>
+      </div>
+      <span class="card__progress-pct"><%= pct %>%</span>
+    </div>
+  <% end %>
+
+  <div class="card__footer">
+    <div class="card__footer-actions">
       <%= link_to "Edit", edit_todo_list_path(todo_list), class: "btn btn--ghost btn--icon" %>
       <%= button_to "Delete", todo_list_path(todo_list), method: :delete,
             class: "btn btn--danger btn--icon",
             data: { turbo_confirm: "Delete \"#{todo_list.name}\" and all its items?" } %>
+      <% if completing %>
+        <button class="btn btn--ghost btn--icon" disabled>
+          <span class="spinner" aria-hidden="true"></span>Completing…
+        </button>
+      <% elsif total > 0 && done < total %>
+        <%= button_to "Complete All",
+              complete_all_todo_list_path(todo_list),
+              class: "btn btn--ghost btn--icon" %>
+      <% end %>
     </div>
+    <span class="card__chevron" data-action="click->collapsible#toggle">&#9654;</span>
   </div>
 <% end %>

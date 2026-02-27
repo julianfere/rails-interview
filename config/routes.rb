@@ -10,6 +10,9 @@ Rails.application.routes.draw do
     collection do
       get :more
     end
+    member do
+      post :complete_all
+    end
   end
 
   root "todo_lists#index"
