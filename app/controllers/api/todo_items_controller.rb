@@ -11,24 +11,12 @@ module Api
       per_page = [params.fetch(:per_page, ITEMS_PER_PAGE).to_i, 100].min
       @pagy, @todo_items = pagy(@todo_list.todo_items.order(completed: :asc, id: :asc), items: per_page)
 
-      respond_to do |format|
-        format.json do
-          render json: {
-            data: @todo_items.map(&:to_json),
-            pagination: {
-              current_page: @pagy.page,
-              total_pages:  @pagy.pages,
-              total_count:  @pagy.count,
-              per_page:     @pagy.items
-            }
-          }
-        end
-      end
+      respond_to :json
     end
 
     # GET /api/todolists/:todo_list_id/todoitems/:id
     def show
-      render json: @todo_item.to_json
+      respond_to :json
     end
 
     # POST /api/todolists/:todo_list_id/todoitems
@@ -36,7 +24,9 @@ module Api
       @todo_item = @todo_list.todo_items.new(todo_item_params)
 
       if @todo_item.save
-        render json: @todo_item.to_json, status: :created
+        respond_to do |format|
+          format.json { render :create, status: :created }
+        end
       else
         render json: @todo_item.errors, status: :unprocessable_entity
       end
@@ -45,7 +35,7 @@ module Api
     # PUT /api/todolists/:todo_list_id/todoitems/:id
     def update
       if @todo_item.update(todo_item_params)
-        render json: @todo_item.to_json
+        respond_to :json
       else
         render json: @todo_item.errors, status: :unprocessable_entity
       end
@@ -55,7 +45,7 @@ module Api
     def destroy
       @todo_item.destroy
 
-      render json: @todo_item.to_json
+      respond_to :json
     end
 
     private
