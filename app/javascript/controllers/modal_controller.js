@@ -17,7 +17,7 @@ export default class extends Controller {
     }
   }
 
-  // Called via data-action="turbo:submit-end->modal#onSubmitEnd" on the frame
+
   onSubmitEnd(event) {
     if (event.detail.success) {
       this.close()

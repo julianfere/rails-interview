@@ -2,7 +2,6 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   connect() {
-    // Trigger entrance animation on next frame so the CSS transition fires
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         this.element.classList.add("toast--visible")

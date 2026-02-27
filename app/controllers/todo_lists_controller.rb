@@ -1,18 +1,16 @@
 class TodoListsController < ApplicationController
   before_action :set_todo_list, only: %i[show edit update destroy complete_all]
 
-  LISTS_PER_PAGE = 10
-
   # GET /todolists
   def index
-    @pagy, @todo_lists = pagy(TodoList.includes(:todo_items).order(:id), items: LISTS_PER_PAGE)
+    @pagy, @todo_lists = paginated_todo_lists
 
     respond_to :html
   end
 
   # GET /todolists/more
   def more
-    @pagy, @todo_lists = pagy(TodoList.includes(:todo_items).order(:id), items: LISTS_PER_PAGE)
+    @pagy, @todo_lists = paginated_todo_lists
 
     respond_to do |format|
       format.turbo_stream do
@@ -42,7 +40,7 @@ class TodoListsController < ApplicationController
     if @todo_list.save
       respond_to do |format|
         format.turbo_stream do
-          @pagy, _lists = pagy(TodoList.order(:id), items: LISTS_PER_PAGE)
+          @pagy, _lists = pagy(TodoList.order(:id), items: Pagination::LISTS_PER_PAGE)
           render turbo_stream: [
             turbo_stream.append("todo_lists", partial: "todo_list", locals: { todo_list: @todo_list }),
             turbo_stream.replace("load_more_lists",
@@ -108,7 +106,7 @@ class TodoListsController < ApplicationController
     else
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: toast_stream(t("todo_lists.already_completed"), type: :info)
+          render turbo_stream: [toast_stream(t("todo_lists.already_completed"), type: :info)]
         end
       end
     end
@@ -138,5 +136,9 @@ class TodoListsController < ApplicationController
 
   def todo_list_params
     params.require(:todo_list).permit(:name)
+  end
+
+  def paginated_todo_lists
+    pagy(TodoList.includes(:todo_items).order(:id), items: Pagination::LISTS_PER_PAGE)
   end
 end

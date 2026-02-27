@@ -1,4 +1,6 @@
 class TodoItemsController < ApplicationController
+  include TodoItemFindable
+
   before_action :set_todo_list
   before_action :set_todo_item, only: %i[edit update destroy]
 
@@ -14,14 +16,12 @@ class TodoItemsController < ApplicationController
     @todo_item = @todo_list.todo_items.new(todo_item_params)
 
     if @todo_item.save
-      @todo_list = TodoList.includes(:todo_items).find(@todo_list.id)
+      reload_todo_list
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: [
             turbo_stream.append("todo_items_#{@todo_list.id}", partial: "todo_items/todo_item", locals: { todo_item: @todo_item }),
-            turbo_stream.update("new_todo_item_#{@todo_list.id}") do
-              helpers.link_to t("todo_items.add_item"), helpers.new_todo_list_todo_item_path(@todo_list), class: "add-item-trigger"
-            end,
+            turbo_stream.update("new_todo_item_#{@todo_list.id}", partial: "todo_items/add_item_trigger", locals: { todo_list: @todo_list }),
             turbo_stream.replace("todo_list_header_#{@todo_list.id}", partial: "todo_lists/todo_list_header", locals: { todo_list: @todo_list }),
             toast_stream(t("todo_items.created", name: @todo_item.name))
           ]
@@ -35,7 +35,7 @@ class TodoItemsController < ApplicationController
 
   def update
     if @todo_item.update(todo_item_params)
-      @todo_list = TodoList.includes(:todo_items).find(@todo_list.id)
+      reload_todo_list
       respond_to do |format|
         format.turbo_stream do
           completed_changed = @todo_item.saved_change_to_completed?
@@ -59,7 +59,7 @@ class TodoItemsController < ApplicationController
 
   def destroy
     @todo_item.destroy
-    @todo_list = TodoList.includes(:todo_items).find(@todo_list.id)
+    reload_todo_list
 
     respond_to do |format|
       format.turbo_stream do
@@ -76,15 +76,7 @@ class TodoItemsController < ApplicationController
 
   private
 
-  def set_todo_list
-    @todo_list = TodoList.find(params[:todo_list_id])
-  end
-
-  def set_todo_item
-    @todo_item = @todo_list.todo_items.find(params[:id])
-  end
-
-  def todo_item_params
-    params.require(:todo_item).permit(:name, :completed)
+  def reload_todo_list
+    @todo_list = TodoList.includes(:todo_items).find(@todo_list.id)
   end
 end
