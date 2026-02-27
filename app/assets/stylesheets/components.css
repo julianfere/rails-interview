@@ -220,6 +220,28 @@ form.button_to:has(.btn--delete) { margin-left: auto; }
 .card__body-inner {
   padding: var(--space-3) var(--space-5) var(--space-5);
   border-top: 1px solid var(--color-border-subtle);
+  max-height: 400px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+.card__body-inner::-webkit-scrollbar {
+  width: 4px;
+}
+
+.card__body-inner::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.card__body-inner::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 99px;
+}
+
+.card__body-inner::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-disabled);
 }
 
 /* ── List status indicator (nested checkbox) ─────────────── */
