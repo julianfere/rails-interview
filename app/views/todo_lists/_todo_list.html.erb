@@ -11,7 +11,7 @@
       <%= turbo_frame_tag "todo_list_items_#{todo_list.id}",
             data: { collapsible_target: "frame",
                     lazy_src: todo_list_path(todo_list) } do %>
-        <p class="frame-loading">Loading items&hellip;</p>
+        <p class="frame-loading"><%= t("ui.loading") %></p>
       <% end %>
     </div>
   </div>

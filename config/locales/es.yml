@@ -1,0 +1,47 @@
+es:
+  app:
+    title: "TodoFlow"
+
+  ui:
+    save: "Guardar"
+    cancel: "Cancelar"
+    edit: "Editar"
+    delete: "Eliminar"
+    done: "Listo"
+    add: "Agregar"
+    update: "Actualizar"
+    loading: "Cargando elementos…"
+    dismiss: "Cerrar"
+
+  todo_lists:
+    new_list: "+ Nueva lista"
+    new_heading: "Nueva lista"
+    edit_heading: "Editar lista"
+    name_placeholder: "Nombre de la lista…"
+    load_more: "Cargar más listas"
+    done_count: "%{done}/%{total} hechos"
+    complete_all: "Completar todo"
+    completing: "Completando…"
+    confirm_delete: "¿Eliminar \"%{name}\" y todos sus elementos?"
+    empty_state_title: "Sin listas"
+    empty_state_subtitle: "Crea tu primera lista para comenzar"
+    created: "Lista \"%{name}\" creada"
+    updated: "Lista \"%{name}\" actualizada"
+    destroyed: "Lista \"%{name}\" eliminada"
+    completing_background: "Completando %{count} elementos en segundo plano…"
+    already_completed: "Todos los elementos ya están completos"
+    all_completed: "¡Todos los elementos de \"%{name}\" completados!"
+
+  todo_items:
+    add_item: "+ Agregar elemento"
+    name_placeholder: "Nombre del elemento…"
+    no_items: "Sin elementos aún"
+    load_more: "Cargar más elementos"
+    mark_done: "Marcar como listo"
+    mark_pending: "Marcar como pendiente"
+    confirm_delete: "¿Eliminar este elemento?"
+    created: "\"%{name}\" agregado"
+    completed: "\"%{name}\" completado"
+    marked_pending: "\"%{name}\" marcado como pendiente"
+    updated: "\"%{name}\" actualizado"
+    destroyed: "\"%{name}\" eliminado"

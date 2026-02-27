@@ -38,7 +38,6 @@ class CompleteAllItemsJob < ApplicationJob
       )
     end
 
-
     todo_list.reload
     Turbo::StreamsChannel.broadcast_replace_to(
       "todo_list_#{todo_list.id}",
@@ -51,7 +50,7 @@ class CompleteAllItemsJob < ApplicationJob
       "todo_list_#{todo_list.id}",
       target: "toast_container",
       partial: "shared/toast",
-      locals: { message: "All items in \"#{todo_list.name}\" completed!", type: :success }
+      locals: { message: I18n.t("todo_lists.all_completed", name: todo_list.name), type: :success }
     )
   end
 end

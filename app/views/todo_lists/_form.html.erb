@@ -10,12 +10,12 @@
 
   <div class="list-form">
     <div class="list-form__field">
-      <%= form.text_field :name, placeholder: "List name…" %>
+      <%= form.text_field :name, placeholder: t("todo_lists.name_placeholder") %>
     </div>
     <div class="list-form__actions">
-      <%= form.submit "Save", class: "btn btn--primary btn--icon" %>
+      <%= form.submit t("ui.save"), class: "btn btn--primary btn--icon" %>
       <% if cancel_path %>
-        <%= link_to "Cancel", cancel_path, class: "btn btn--ghost btn--icon" %>
+        <%= link_to t("ui.cancel"), cancel_path, class: "btn btn--ghost btn--icon" %>
       <% end %>
     </div>
   </div>

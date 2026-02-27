@@ -1,6 +1,6 @@
 <div class="items-list" id="todo_items_<%= todo_list.id %>">
   <% if todo_items.empty? %>
-    <p class="items-empty-state">No items yet</p>
+    <p class="items-empty-state"><%= t("todo_items.no_items") %></p>
   <% else %>
     <% todo_items.each do |todo_item| %>
       <%= render todo_item %>
@@ -9,5 +9,5 @@
 </div>
 
 <%= turbo_frame_tag "new_todo_item_#{todo_list.id}" do %>
-  <%= link_to "+ Add Item", new_todo_list_todo_item_path(todo_list), class: "add-item-trigger" %>
+  <%= link_to t("todo_items.add_item"), new_todo_list_todo_item_path(todo_list), class: "add-item-trigger" %>
 <% end %>

@@ -1,7 +1,7 @@
 <%= turbo_frame_tag "new_todo_list" do %>
   <div class="card">
     <div class="card__body-inner">
-      <p class="form-heading">New List</p>
+      <p class="form-heading"><%= t("todo_lists.new_heading") %></p>
       <%= render 'form', todo_list: @todo_list, cancel_path: todo_lists_path %>
     </div>
   </div>

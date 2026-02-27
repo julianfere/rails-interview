@@ -20,10 +20,10 @@ class TodoItemsController < ApplicationController
           render turbo_stream: [
             turbo_stream.append("todo_items_#{@todo_list.id}", partial: "todo_items/todo_item", locals: { todo_item: @todo_item }),
             turbo_stream.update("new_todo_item_#{@todo_list.id}") do
-              helpers.link_to "+ Add Item", helpers.new_todo_list_todo_item_path(@todo_list), class: "add-item-trigger"
+              helpers.link_to t("todo_items.add_item"), helpers.new_todo_list_todo_item_path(@todo_list), class: "add-item-trigger"
             end,
             turbo_stream.replace("todo_list_header_#{@todo_list.id}", partial: "todo_lists/todo_list_header", locals: { todo_list: @todo_list }),
-            toast_stream("\"#{@todo_item.name}\" added")
+            toast_stream(t("todo_items.created", name: @todo_item.name))
           ]
         end
         format.html { redirect_to todo_list_path(@todo_list) }
@@ -40,9 +40,9 @@ class TodoItemsController < ApplicationController
         format.turbo_stream do
           completed_changed = @todo_item.saved_change_to_completed?
           message = if completed_changed
-            @todo_item.completed? ? "\"#{@todo_item.name}\" completed" : "\"#{@todo_item.name}\" marked as pending"
+            @todo_item.completed? ? t("todo_items.completed", name: @todo_item.name) : t("todo_items.marked_pending", name: @todo_item.name)
           else
-            "\"#{@todo_item.name}\" updated"
+            t("todo_items.updated", name: @todo_item.name)
           end
           render turbo_stream: [
             turbo_stream.replace(@todo_item, partial: "todo_items/todo_item", locals: { todo_item: @todo_item }),
@@ -67,7 +67,7 @@ class TodoItemsController < ApplicationController
         render turbo_stream: [
           turbo_stream.remove(@todo_item),
           turbo_stream.replace("todo_list_header_#{@todo_list.id}", partial: "todo_lists/todo_list_header", locals: { todo_list: @todo_list }),
-          toast_stream("\"#{item_name}\" deleted", type: :error)
+          toast_stream(t("todo_items.destroyed", name: item_name))
         ]
       end
       format.html { redirect_to todo_list_path(@todo_list) }

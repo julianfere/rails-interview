@@ -1,6 +1,6 @@
 <%= turbo_frame_tag "todo_list_header_#{@todo_list.id}" do %>
   <div class="card__edit-body">
-    <p class="form-heading">Edit List</p>
+    <p class="form-heading"><%= t("todo_lists.edit_heading") %></p>
     <%= render 'form', todo_list: @todo_list, cancel_path: todo_lists_path %>
   </div>
 <% end %>

@@ -1,33 +1,47 @@
-# Files in the config/locales directory are used for internationalization
-# and are automatically loaded by Rails. If you want to use locales other
-# than English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# The following keys must be escaped otherwise they will not be retrieved by
-# the default I18n backend:
-#
-# true, false, on, off, yes, no
-#
-# Instead, surround them with single quotes.
-#
-# en:
-#   "true": "foo"
-#
-# To learn more, please read the Rails Internationalization guide
-# available at https://guides.rubyonrails.org/i18n.html.
-
 en:
-  hello: "Hello world"
+  app:
+    title: "TodoFlow"
+
+  ui:
+    save: "Save"
+    cancel: "Cancel"
+    edit: "Edit"
+    delete: "Delete"
+    done: "Done"
+    add: "Add"
+    update: "Update"
+    loading: "Loading items…"
+    dismiss: "Dismiss"
+
+  todo_lists:
+    new_list: "+ New List"
+    new_heading: "New List"
+    edit_heading: "Edit List"
+    name_placeholder: "List name…"
+    load_more: "Load more lists"
+    done_count: "%{done}/%{total} done"
+    complete_all: "Complete All"
+    completing: "Completing…"
+    confirm_delete: "Delete \"%{name}\" and all its items?"
+    empty_state_title: "No lists yet"
+    empty_state_subtitle: "Create your first list to get started"
+    created: "List \"%{name}\" created"
+    updated: "List \"%{name}\" updated"
+    destroyed: "List \"%{name}\" deleted"
+    completing_background: "Completing %{count} items in background…"
+    already_completed: "All items already completed"
+    all_completed: "All items in \"%{name}\" completed!"
+
+  todo_items:
+    add_item: "+ Add Item"
+    name_placeholder: "Item name…"
+    no_items: "No items yet"
+    load_more: "Load more items"
+    mark_done: "Mark as done"
+    mark_pending: "Mark as pending"
+    confirm_delete: "Delete this item?"
+    created: "\"%{name}\" added"
+    completed: "\"%{name}\" completed"
+    marked_pending: "\"%{name}\" marked as pending"
+    updated: "\"%{name}\" updated"
+    destroyed: "\"%{name}\" deleted"

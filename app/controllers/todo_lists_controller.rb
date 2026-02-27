@@ -49,7 +49,7 @@ class TodoListsController < ApplicationController
             turbo_stream.replace("load_more_lists",
               partial: "todo_lists/load_more_lists",
               locals: { pagy: @pagy }),
-            toast_stream("List \"#{@todo_list.name}\" created")
+            toast_stream(t("todo_lists.created", name: @todo_list.name))
           ]
         end
         format.html { redirect_to todo_list_path(@todo_list) }
@@ -78,7 +78,7 @@ class TodoListsController < ApplicationController
         format.turbo_stream do
           render turbo_stream: [
             turbo_stream.replace(@todo_list, partial: "todo_list", locals: { todo_list: @todo_list }),
-            toast_stream("List \"#{@todo_list.name}\" updated")
+            toast_stream(t("todo_lists.updated", name: @todo_list.name))
           ]
         end
         format.html { redirect_to todo_list_path(@todo_list) }
@@ -102,14 +102,14 @@ class TodoListsController < ApplicationController
               partial: "todo_lists/todo_list_header",
               locals: { todo_list: @todo_list, completing: true }
             ),
-            toast_stream("Completing #{pending_count} items in background…", type: :info)
+            toast_stream(t("todo_lists.completing_background", count: pending_count), type: :info)
           ]
         end
       end
     else
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: toast_stream("All items already completed", type: :info)
+          render turbo_stream: toast_stream(t("todo_lists.already_completed"), type: :info)
         end
       end
     end
@@ -124,7 +124,7 @@ class TodoListsController < ApplicationController
       format.turbo_stream do
         render turbo_stream: [
           turbo_stream.remove(@todo_list),
-          toast_stream("List \"#{name}\" deleted", type: :error)
+          toast_stream(t("todo_lists.destroyed", name: name))
         ]
       end
       format.html { redirect_to todo_lists_path }
