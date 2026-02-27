@@ -11,14 +11,16 @@
     <div class="inline-form__field">
       <%= form.text_field :name, placeholder: "Item name…" %>
     </div>
-    <% if todo_item.persisted? %>
-      <div class="checkbox-row">
-        <%= form.check_box :completed %>
-        <%= form.label :completed, "Done" %>
+    <div class="inline-form__row2">
+      <% if todo_item.persisted? %>
+        <div class="checkbox-row">
+          <%= form.check_box :completed %>
+          <%= form.label :completed, "Done" %>
+        </div>
+      <% end %>
+      <div class="inline-form__actions">
+        <%= form.submit todo_item.persisted? ? "Update" : "Add", class: "btn btn--primary" %>
       </div>
-    <% end %>
-    <div class="inline-form__actions">
-      <%= form.submit todo_item.persisted? ? "Update" : "Add", class: "btn btn--primary" %>
     </div>
   </div>
 <% end %>

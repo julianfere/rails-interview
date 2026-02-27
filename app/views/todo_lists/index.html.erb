@@ -6,7 +6,16 @@
 </header>
 
 <div id="todo_lists" class="card-list">
-  <%= render "todo_list_collection", todo_lists: @todo_lists %>
+  <% if @todo_lists.empty? %>
+    <div class="grid-empty-state">
+      <p class="grid-empty-state__title">No lists yet</p>
+      <p class="grid-empty-state__subtitle">Create your first list to get started</p>
+      <%= link_to "+ New List", new_todo_list_path, class: "btn btn--primary",
+            data: { turbo_frame: "new_todo_list" } %>
+    </div>
+  <% else %>
+    <%= render "todo_list_collection", todo_lists: @todo_lists %>
+  <% end %>
 </div>
 
 <div id="load_more_lists">

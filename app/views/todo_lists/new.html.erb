@@ -2,8 +2,7 @@
   <div class="card">
     <div class="card__body-inner">
       <p class="form-heading">New List</p>
-      <%= render 'form', todo_list: @todo_list %>
-      <%= link_to "Cancel", todo_lists_path, class: "btn btn--ghost" %>
+      <%= render 'form', todo_list: @todo_list, cancel_path: todo_lists_path %>
     </div>
   </div>
 <% end %>

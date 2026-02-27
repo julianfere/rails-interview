@@ -1,6 +1,10 @@
 <div class="items-list" id="todo_items_<%= todo_list.id %>">
-  <% todo_items.each do |todo_item| %>
-    <%= render todo_item %>
+  <% if todo_items.empty? %>
+    <p class="items-empty-state">No items yet</p>
+  <% else %>
+    <% todo_items.each do |todo_item| %>
+      <%= render todo_item %>
+    <% end %>
   <% end %>
 </div>
 

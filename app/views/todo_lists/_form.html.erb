@@ -1,3 +1,4 @@
+<% cancel_path ||= nil %>
 <%= form_with model: todo_list do |form| %>
   <% if todo_list.errors.any? %>
     <div class="field-errors">
@@ -7,12 +8,15 @@
     </div>
   <% end %>
 
-  <div class="inline-form">
-    <div class="inline-form__field">
+  <div class="list-form">
+    <div class="list-form__field">
       <%= form.text_field :name, placeholder: "List name…" %>
     </div>
-    <div class="inline-form__actions">
-      <%= form.submit "Save", class: "btn btn--primary" %>
+    <div class="list-form__actions">
+      <%= form.submit "Save", class: "btn btn--primary btn--icon" %>
+      <% if cancel_path %>
+        <%= link_to "Cancel", cancel_path, class: "btn btn--ghost btn--icon" %>
+      <% end %>
     </div>
   </div>
 <% end %>
