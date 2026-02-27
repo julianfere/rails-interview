@@ -1,9 +1,18 @@
 <%= turbo_frame_tag "todo_list_items_#{@todo_list.id}" do %>
   <div class="items-list" id="todo_items_<%= @todo_list.id %>">
-    <% @todo_list.todo_items.each do |todo_item| %>
+    <% @todo_items.each do |todo_item| %>
       <%= render todo_item %>
     <% end %>
   </div>
+
+  <% if @pagy.next %>
+    <div id="load_more_items_<%= @todo_list.id %>" class="load-more-wrap">
+      <%= link_to "Load more items",
+            todo_list_path(@todo_list, page: @pagy.next),
+            class: "btn btn--ghost load-more-btn",
+            data: { turbo_frame: "todo_list_items_#{@todo_list.id}" } %>
+    </div>
+  <% end %>
 
   <%= turbo_frame_tag "new_todo_item_#{@todo_list.id}" do %>
     <%= link_to "+ Add Item", new_todo_list_todo_item_path(@todo_list), class: "add-item-trigger" %>

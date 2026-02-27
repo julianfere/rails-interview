@@ -3,9 +3,12 @@ module Api
     before_action :set_todo_list, only: %i[show update destroy]
     skip_forgery_protection
 
+    LISTS_PER_PAGE = 10
+
     # GET /api/todolists
     def index
-      @todo_lists = TodoList.all
+      per_page = [params.fetch(:per_page, LISTS_PER_PAGE).to_i, 100].min
+      @pagy, @todo_lists = pagy(TodoList.order(:id), items: per_page)
 
       respond_to :json
     end

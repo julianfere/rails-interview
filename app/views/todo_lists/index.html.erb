@@ -9,7 +9,9 @@
 </div>
 
 <div id="todo_lists" class="card-list">
-  <% @todo_lists.each do |todo_list| %>
-    <%= render todo_list %>
-  <% end %>
+  <%= render "todo_list_collection", todo_lists: @todo_lists %>
+</div>
+
+<div id="load_more_lists">
+  <%= render "load_more_lists", pagy: @pagy %>
 </div>

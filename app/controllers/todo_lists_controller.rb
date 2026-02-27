@@ -1,11 +1,31 @@
 class TodoListsController < ApplicationController
   before_action :set_todo_list, only: %i[show edit update destroy]
 
+  LISTS_PER_PAGE = 10
+
   # GET /todolists
   def index
-    @todo_lists = TodoList.includes(:todo_items)
+    @pagy, @todo_lists = pagy(TodoList.includes(:todo_items).order(:id), items: LISTS_PER_PAGE)
 
     respond_to :html
+  end
+
+  # GET /todolists/more
+  def more
+    @pagy, @todo_lists = pagy(TodoList.includes(:todo_items).order(:id), items: LISTS_PER_PAGE)
+
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.append("todo_lists",
+            partial: "todo_lists/todo_list_collection",
+            locals: { todo_lists: @todo_lists }),
+          turbo_stream.replace("load_more_lists",
+            partial: "todo_lists/load_more_lists",
+            locals: { pagy: @pagy })
+        ]
+      end
+    end
   end
 
   # GET /todolists/new
@@ -22,9 +42,13 @@ class TodoListsController < ApplicationController
     if @todo_list.save
       respond_to do |format|
         format.turbo_stream do
+          @pagy, _lists = pagy(TodoList.order(:id), items: LISTS_PER_PAGE)
           render turbo_stream: [
             turbo_stream.append("todo_lists", partial: "todo_list", locals: { todo_list: @todo_list }),
             turbo_stream.update("new_todo_list", partial: "todo_lists/new_list_trigger"),
+            turbo_stream.replace("load_more_lists",
+              partial: "todo_lists/load_more_lists",
+              locals: { pagy: @pagy }),
             toast_stream("List \"#{@todo_list.name}\" created")
           ]
         end
@@ -37,6 +61,8 @@ class TodoListsController < ApplicationController
 
   # GET /todolists/:id
   def show
+    @pagy, @todo_items = pagy(@todo_list.todo_items.order(:id), items: 10)
+
     respond_to :html
   end
 

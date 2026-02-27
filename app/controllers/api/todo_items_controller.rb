@@ -4,12 +4,25 @@ module Api
     before_action :set_todo_item, only: %i[show update destroy]
     skip_forgery_protection
 
+    ITEMS_PER_PAGE = 10
+
     # GET /api/todolists/:todo_list_id/todoitems
     def index
-      @todo_items = @todo_list.todo_items
+      per_page = [params.fetch(:per_page, ITEMS_PER_PAGE).to_i, 100].min
+      @pagy, @todo_items = pagy(@todo_list.todo_items.order(:id), items: per_page)
 
       respond_to do |format|
-        format.json { render json: @todo_items.map(&:to_json) }
+        format.json do
+          render json: {
+            data: @todo_items.map(&:to_json),
+            pagination: {
+              current_page: @pagy.page,
+              total_pages:  @pagy.pages,
+              total_count:  @pagy.count,
+              per_page:     @pagy.items
+            }
+          }
+        end
       end
     end
 

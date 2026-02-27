@@ -22,10 +22,11 @@ describe Api::TodoItemsController do
         expect(response.status).to eq(200)
       end
 
-      it 'includes todo item records' do
+      it 'includes todo item records in the data key' do
         get :index, params: { todo_list_id: todo_list.id }, format: :json
 
-        todo_items = JSON.parse(response.body)
+        body = JSON.parse(response.body)
+        todo_items = body['data']
 
         aggregate_failures 'includes the id, name, completed and todo_list_id' do
           expect(todo_items.count).to eq(1)
@@ -34,6 +35,55 @@ describe Api::TodoItemsController do
           expect(todo_items[0]['name']).to eq(todo_item.name)
           expect(todo_items[0]['completed']).to eq(todo_item.completed)
           expect(todo_items[0]['todo_list_id']).to eq(todo_item.todo_list_id)
+        end
+      end
+
+      it 'includes pagination metadata' do
+        get :index, params: { todo_list_id: todo_list.id }, format: :json
+
+        pagination = JSON.parse(response.body)['pagination']
+
+        aggregate_failures 'includes pagination keys' do
+          expect(pagination.keys).to match_array(['current_page', 'total_pages', 'total_count', 'per_page'])
+          expect(pagination['current_page']).to eq(1)
+          expect(pagination['total_count']).to eq(1)
+        end
+      end
+
+      context 'when there are more than 10 records' do
+        before { 10.times { |i| TodoItem.create(name: "Item #{i}", todo_list: todo_list) } }
+
+        it 'paginates to 10 per page by default' do
+          get :index, params: { todo_list_id: todo_list.id }, format: :json
+
+          body = JSON.parse(response.body)
+
+          expect(body['data'].count).to eq(10)
+          expect(body['pagination']['total_pages']).to eq(2)
+        end
+
+        it 'returns page 2 with ?page=2' do
+          get :index, params: { todo_list_id: todo_list.id, page: 2 }, format: :json
+
+          body = JSON.parse(response.body)
+
+          expect(body['data'].count).to eq(1)
+          expect(body['pagination']['current_page']).to eq(2)
+        end
+
+        it 'respects custom per_page param' do
+          get :index, params: { todo_list_id: todo_list.id, per_page: 5 }, format: :json
+
+          body = JSON.parse(response.body)
+
+          expect(body['data'].count).to eq(5)
+          expect(body['pagination']['total_pages']).to eq(3)
+        end
+
+        it 'caps per_page at 100' do
+          get :index, params: { todo_list_id: todo_list.id, per_page: 999 }, format: :json
+
+          expect(JSON.parse(response.body)['pagination']['per_page']).to eq(100)
         end
       end
     end

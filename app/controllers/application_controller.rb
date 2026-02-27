@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  include Pagy::Backend
+
   rescue_from ActionController::UnknownFormat, with: :raise_not_found
 
   def raise_not_found
