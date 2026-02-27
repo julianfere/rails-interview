@@ -1,0 +1,26 @@
+<%= form_with model: [todo_list, todo_item] do |form| %>
+  <% if todo_item.errors.any? %>
+    <div class="field-errors">
+      <% todo_item.errors.full_messages.each do |message| %>
+        <p><%= message %></p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="inline-form">
+    <div class="inline-form__field">
+      <%= form.text_field :name, placeholder: t("todo_items.name_placeholder") %>
+    </div>
+    <div class="inline-form__row2">
+      <% if todo_item.persisted? %>
+        <div class="checkbox-row">
+          <%= form.check_box :completed %>
+          <%= form.label :completed, t("ui.done") %>
+        </div>
+      <% end %>
+      <div class="inline-form__actions">
+        <%= form.submit todo_item.persisted? ? t("ui.update") : t("ui.add"), class: "btn btn--primary" %>
+      </div>
+    </div>
+  </div>
+<% end %>

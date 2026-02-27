@@ -1,0 +1,8 @@
+<% if pagy.next %>
+  <div class="load-more-wrap">
+    <%= link_to t("todo_lists.load_more"),
+          more_todo_lists_path(page: pagy.next),
+          class: "btn btn--ghost load-more-btn",
+          data: { turbo_stream: "" } %>
+  </div>
+<% end %>

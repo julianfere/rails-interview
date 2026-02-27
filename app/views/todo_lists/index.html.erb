@@ -1,9 +1,26 @@
-<%= link_to 'Add Todo List', new_todo_list_path %>
+<header class="page-header">
+  <h1 class="page-header__title"><%= t("app.title") %></h1>
+  <%= link_to t("todo_lists.new_list"), new_todo_list_path,
+        class: "btn btn--ghost",
+        data: {
+          turbo_frame: "new_todo_list_modal",
+          action: "click->modal#open"
+        } %>
+</header>
 
-<div>
-  <% @todo_lists.each do |todo_list| %>
-    <div>
-      #<%= todo_list.id %> | <%= todo_list.name %>
+<div id="todo_lists" class="card-list">
+  <% if @todo_lists.empty? %>
+    <div class="grid-empty-state">
+      <p class="grid-empty-state__title"><%= t("todo_lists.empty_state_title") %></p>
+      <p class="grid-empty-state__subtitle"><%= t("todo_lists.empty_state_subtitle") %></p>
+      <%= link_to t("todo_lists.new_list"), new_todo_list_path, class: "btn btn--primary",
+            data: { turbo_frame: "new_todo_list_modal", action: "click->modal#open" } %>
     </div>
+  <% else %>
+    <%= render "todo_list_collection", todo_lists: @todo_lists %>
   <% end %>
+</div>
+
+<div id="load_more_lists">
+  <%= render "load_more_lists", pagy: @pagy %>
 </div>

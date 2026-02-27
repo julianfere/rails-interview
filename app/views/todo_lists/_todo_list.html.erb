@@ -1,0 +1,19 @@
+<%= turbo_stream_from "todo_list_#{todo_list.id}" %>
+<article class="card"
+         data-controller="collapsible"
+         data-collapsible-open-value="false"
+         id="<%= dom_id(todo_list) %>">
+
+  <%= render "todo_list_header", todo_list: todo_list %>
+
+  <div class="card__body">
+    <div class="card__body-inner">
+      <%= turbo_frame_tag "todo_list_items_#{todo_list.id}",
+            data: { collapsible_target: "frame",
+                    lazy_src: todo_list_path(todo_list) } do %>
+        <p class="frame-loading"><%= t("ui.loading") %></p>
+      <% end %>
+    </div>
+  </div>
+
+</article>

@@ -1,0 +1,63 @@
+<% completing ||= false
+  total = todo_list.todo_items.size
+  done  = todo_list.todo_items.count(&:completed)
+  pct   = total > 0 ? (done * 100 / total) : 0
+  state = if total == 0 then :empty
+          elsif done == total then :complete
+          elsif done > 0     then :partial
+          else :pending
+          end %>
+<%= turbo_frame_tag "todo_list_header_#{todo_list.id}" do %>
+  <div class="card__header" data-action="click->collapsible#toggle">
+    <div class="card__header-top">
+      <span class="list-status list-status--<%= state %>">
+        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+          <% if state == :complete %>
+            <path d="M4.5 8l2.5 2.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <% elsif state == :partial %>
+            <rect x="4.5" y="7.25" width="7" height="1.5" rx="0.75" fill="currentColor"/>
+          <% end %>
+        </svg>
+      </span>
+      <span class="card__title"><%= todo_list.name %></span>
+    </div>
+    <% if total > 0 %>
+      <span class="card__count"><%= t("todo_lists.done_count", done: done, total: total) %></span>
+    <% end %>
+  </div>
+
+  <% if total > 0 %>
+    <div class="card__progress">
+      <div class="card__progress-track">
+        <div class="card__progress-bar card__progress-bar--<%= state %>"
+             style="width: <%= pct %>%"></div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="card__footer">
+    <div class="card__footer-actions">
+      <% if completing %>
+        <button class="btn btn--ghost btn--icon" disabled>
+          <span class="spinner" aria-hidden="true"></span><%= t("todo_lists.completing") %>
+        </button>
+      <% elsif total > 0 && done < total %>
+        <%= button_to t("todo_lists.complete_all"),
+              complete_all_todo_list_path(todo_list),
+              class: "btn btn--primary btn--icon" %>
+      <% end %>
+      <%= link_to t("ui.edit"), edit_todo_list_path(todo_list),
+            class: "btn btn--ghost btn--icon",
+            data: { turbo_frame: "todo_list_header_#{todo_list.id}" } %>
+      <%= button_to t("ui.delete"), todo_list_path(todo_list), method: :delete,
+            class: "btn btn--danger btn--icon btn--delete",
+            data: { turbo_confirm: t("todo_lists.confirm_delete", name: todo_list.name) } %>
+    </div>
+    <span class="card__chevron" data-action="click->collapsible#toggle">
+      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+  </div>
+<% end %>

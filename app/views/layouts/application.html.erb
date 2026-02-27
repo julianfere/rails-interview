@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="<%= I18n.locale %>">
   <head>
-    <title>RailsInterview</title>
+    <title><%= t("app.title") %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -10,7 +12,21 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <%= yield %>
+  <body data-controller="modal">
+    <div id="toast_container" class="toast-container" aria-live="polite"></div>
+
+    <dialog id="new_list_modal" class="modal"
+            data-modal-target="dialog"
+            data-action="click->modal#backdropClick">
+      <div class="modal__content">
+        <%= turbo_frame_tag "new_todo_list_modal",
+              data: { action: "turbo:submit-end->modal#onSubmitEnd" } do %>
+        <% end %>
+      </div>
+    </dialog>
+
+    <div class="page">
+      <%= yield %>
+    </div>
   </body>
 </html>

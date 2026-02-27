@@ -1,0 +1,4 @@
+<%= turbo_frame_tag "new_todo_item_#{@todo_list.id}" do %>
+  <%= render 'form', todo_list: @todo_list, todo_item: @todo_item %>
+  <%= link_to t("ui.cancel"), todo_list_path(@todo_list), class: "btn btn--ghost" %>
+<% end %>

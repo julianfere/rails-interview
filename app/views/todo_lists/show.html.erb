@@ -1,0 +1,12 @@
+<%= turbo_frame_tag "todo_list_items_#{@todo_list.id}" do %>
+  <%= render "todo_lists/todo_items_list", todo_list: @todo_list, todo_items: @todo_items %>
+
+  <% if @pagy.next %>
+    <div id="load_more_items_<%= @todo_list.id %>" class="load-more-wrap">
+      <%= link_to t("todo_items.load_more"),
+            todo_list_path(@todo_list, page: @pagy.next),
+            class: "btn btn--ghost load-more-btn",
+            data: { turbo_frame: "todo_list_items_#{@todo_list.id}" } %>
+    </div>
+  <% end %>
+<% end %>
