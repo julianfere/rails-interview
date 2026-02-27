@@ -71,10 +71,13 @@
 }
 
 .card-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-  gap: var(--space-4);
-  align-items: start;
+  columns: 360px;
+  column-gap: var(--space-4);
+}
+
+.card-list > * {
+  break-inside: avoid;
+  margin-bottom: var(--space-4);
 }
 
 /* ── Card header ─────────────────────────────────────────── */
@@ -474,7 +477,7 @@ form.button_to:has(.btn--delete) { margin-left: auto; }
 /* ── Grid empty state (no lists) ─────────────────────────── */
 
 .grid-empty-state {
-  grid-column: 1 / -1;
+  column-span: all;
   text-align: center;
   padding: var(--space-12) var(--space-4);
   color: var(--color-text-disabled);
