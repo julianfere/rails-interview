@@ -1,5 +1,5 @@
 .page {
-  max-width: 720px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: var(--space-8) var(--space-4);
 }
@@ -22,4 +22,8 @@
 
 .page-header__title span {
   color: var(--color-accent);
+}
+
+.page-header turbo-frame {
+  transition: opacity 0.15s ease;
 }

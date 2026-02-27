@@ -71,56 +71,122 @@
 }
 
 .card-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-4);
+  align-items: start;
 }
 
 /* ── Card header ─────────────────────────────────────────── */
 
-turbo-frame[id^="todo_list_header_"] {
-  display: block;
-}
-
 .card__header {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--space-4) var(--space-5);
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-5) var(--space-3);
   cursor: pointer;
   user-select: none;
   transition: background var(--duration-fast) var(--ease-out);
 }
 
+.card__header * { cursor: pointer; }
+
 .card__header:hover { background: var(--color-surface-hover); }
 
-.card__header-left {
+.card__header-top {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--space-3);
   min-width: 0;
-}
-
-.card__chevron {
-  color: var(--color-text-disabled);
-  font-size: 0.6rem;
-  transition: transform var(--duration-normal) var(--ease-out),
-              color     var(--duration-fast)   var(--ease-out);
-  flex-shrink: 0;
-}
-
-.card[data-collapsible-open-value="true"] .card__chevron {
-  transform: rotate(90deg);
-  color: var(--color-accent);
 }
 
 .card__title {
   font-size: var(--text-base);
   font-weight: var(--fw-semi);
   color: var(--color-text-primary);
-  white-space: nowrap;
+  line-height: var(--leading-normal);
+  word-break: break-word;
+}
+
+.card__count {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  align-self: flex-end;
+}
+
+/* ── Card progress bar ───────────────────────────────────── */
+
+.card__progress {
+  padding: 0 var(--space-5) var(--space-3);
+}
+
+.card__progress-track {
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--color-border-subtle);
   overflow: hidden;
-  text-overflow: ellipsis;
+}
+
+.card__progress-bar {
+  height: 100%;
+  border-radius: inherit;
+  transition: width var(--duration-normal) var(--ease-out);
+}
+
+.card__progress-bar--empty   { background: var(--color-border-subtle); }
+.card__progress-bar--pending { background: var(--color-border); }
+.card__progress-bar--partial { background: var(--color-accent); }
+.card__progress-bar--complete { background: var(--color-success); }
+
+/* ── Card footer ─────────────────────────────────────────── */
+
+turbo-frame[id^="todo_list_header_"] {
+  display: block;
+}
+
+turbo-cable-stream-source {
+  display: none;
+}
+
+
+.card__footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.card__footer-actions {
+  display: flex;
+  gap: var(--space-2);
+  width: 100%;
+  align-items: center;
+}
+
+.btn--delete,
+form.button_to:has(.btn--delete) { margin-left: auto; }
+
+.card__chevron {
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  transition: transform var(--duration-normal) var(--ease-out),
+              color     var(--duration-fast)   var(--ease-out);
+  flex-shrink: 0;
+  cursor: pointer;
+  padding: var(--space-1);
+}
+
+.card__chevron svg {
+  width: 14px;
+  height: 14px;
+}
+
+.card[data-collapsible-open-value="true"] .card__chevron {
+  transform: rotate(90deg);
+  color: var(--color-accent);
 }
 
 .card__meta {
@@ -129,15 +195,9 @@ turbo-frame[id^="todo_list_header_"] {
   flex-shrink: 0;
 }
 
-.card__count {
-  font-size: var(--text-xs);
-  color: var(--color-text-disabled);
-  flex-shrink: 0;
-}
-
 .card__actions {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--space-2);
   flex-shrink: 0;
 }
@@ -167,6 +227,7 @@ turbo-frame[id^="todo_list_header_"] {
   flex-shrink: 0;
   width: 16px;
   height: 16px;
+  margin-top: 2px;
 }
 
 .list-status svg { width: 16px; height: 16px; }
@@ -247,6 +308,9 @@ turbo-frame[id^="todo_list_header_"] {
   margin-bottom: var(--space-3);
 }
 
+.todo-item { order: 0; }
+.todo-item--completed { order: 1; }
+
 /* ── Add item trigger ────────────────────────────────────── */
 
 .add-item-trigger {
@@ -275,27 +339,47 @@ turbo-frame[id^="todo_list_header_"] {
   text-decoration: none;
 }
 
-/* ── Inline form ─────────────────────────────────────────── */
+/* ── List form (todo list new/edit — two-row stacked) ────── */
+
+.list-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.list-form__field { width: 100%; }
+
+.list-form__actions {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+/* ── Inline form (todo item — two-row stacked) ───────────── */
 
 .inline-form {
   display: flex;
+  flex-direction: column;
   gap: var(--space-2);
-  align-items: flex-end;
 }
 
-.inline-form__field { flex: 1; }
+.inline-form__field { width: 100%; }
+
+.inline-form__field input[type="text"] { width: 100%; }
+
+.inline-form__row2 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.inline-form__row2 .inline-form__actions { margin-left: auto; }
 
 .inline-form__actions {
   display: flex;
   gap: var(--space-2);
   align-items: center;
   flex-shrink: 0;
-}
-
-/* ── New list area ───────────────────────────────────────── */
-
-.new-list-area {
-  margin-bottom: var(--space-6);
 }
 
 /* ── Error messages ──────────────────────────────────────── */
@@ -311,6 +395,41 @@ turbo-frame[id^="todo_list_header_"] {
 .field-errors p {
   color: var(--color-danger);
   font-size: var(--text-xs);
+}
+
+/* ── Load more button ────────────────────────────────────── */
+
+.load-more-wrap {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-4) 0 var(--space-2);
+  position: relative;
+}
+
+.load-more-wrap::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--color-border-subtle);
+  z-index: 0;
+}
+
+.load-more-btn {
+  position: relative;
+  z-index: 1;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: var(--space-2) var(--space-5);
+  background: var(--color-bg);
+}
+
+.load-more-btn:hover {
+  background: var(--color-surface);
 }
 
 /* ── Loading placeholder ─────────────────────────────────── */
@@ -340,6 +459,45 @@ turbo-frame[id^="todo_list_header_"] {
   font-size: var(--text-lg);
   font-weight: var(--fw-semi);
   margin-bottom: var(--space-2);
+}
+
+/* ── Items empty state (inside card body) ────────────────── */
+
+.items-empty-state {
+  font-size: var(--text-sm);
+  color: var(--color-text-disabled);
+  padding: var(--space-2) var(--space-3);
+  font-style: italic;
+}
+
+/* ── Grid empty state (no lists) ─────────────────────────── */
+
+.grid-empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: var(--space-12) var(--space-4);
+  color: var(--color-text-disabled);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.grid-empty-state__title {
+  font-size: var(--text-lg);
+  font-weight: var(--fw-semi);
+  color: var(--color-text-muted);
+}
+
+.grid-empty-state__subtitle {
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-2);
+}
+
+/* ── Edit body inside card header frame ──────────────────── */
+
+.card__edit-body {
+  padding: var(--space-4) var(--space-5);
 }
 
 /* ── Form heading inside card ────────────────────────────── */
@@ -456,3 +614,21 @@ turbo-frame[id^="todo_list_header_"] {
 }
 
 .toast__close:hover { opacity: 1; }
+
+/* ── Spinner ─────────────────────────────────────────────── */
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle;
+  margin-right: 4px;
+}
