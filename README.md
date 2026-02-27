@@ -33,3 +33,22 @@ Check integration tests at: (https://github.com/crunchloop/interview-tests)
 ![crunchloop](https://s3.amazonaws.com/crunchloop.io/logo-blue.png)
 
 We strongly believe in giving back :rocket:. Let's work together [`Get in touch`](https://crunchloop.io/#contact).
+
+---
+
+## Requerimientos del challenge
+
+- [x] Arreglar tests
+- [x] Usar nested routes
+- [x] Hacer interfaz web de todo list y todo items, seedear muchos todo items e implementar un complete all
+  - Job async
+  - Completar en tiempo real en la interfaz web (Turbo)
+
+## Lo que se agregó
+
+- **Interfaz web completa** — vistas HTML para todo lists y todo items con Hotwire (Turbo Frames + Turbo Streams)
+- **Complete All** — botón que despacha `CompleteAllItemsJob` y actualiza los items en tiempo real por batches vía ActionCable
+- **Paginación** — con Pagy en el index de listas y lazy load de items al expandir cada card
+- **Tests corregidos** — specs de `Api::TodoItemsController` pasando con la nueva estructura de rutas
+- **Migración a Jbuilder** — respuestas JSON de `Api::TodoListsController` movidas a vistas `.json.jbuilder`
+- **Toast notifications** — para mostrar mensajes de éxito/error en la interfaz web usando Stimulus
