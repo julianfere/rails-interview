@@ -21,12 +21,12 @@ class CompleteAllItemsJob < ApplicationJob
       TodoItem.where(id: ids).update_all(completed: true, updated_at: Time.current)
 
       todo_list.reload
-      all_items = todo_list.todo_items.order(completed: :asc, id: :asc)
+      first_page_items = todo_list.todo_items.order(completed: :asc, id: :asc).limit(10)
       Turbo::StreamsChannel.broadcast_replace_to(
         "todo_list_#{todo_list.id}",
         target: "todo_list_items_#{todo_list.id}",
         partial: "todo_lists/todo_items_list",
-        locals: { todo_list: todo_list, todo_items: all_items }
+        locals: { todo_list: todo_list, todo_items: first_page_items }
       )
 
       # Updatea la progress bar
