@@ -1,6 +1,6 @@
 es:
   app:
-    title: "TodoFlow"
+    title: "Mis Todos"
 
   ui:
     save: "Guardar"
