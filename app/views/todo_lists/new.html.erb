@@ -1,8 +1,4 @@
-<%= turbo_frame_tag "new_todo_list" do %>
-  <div class="card">
-    <div class="card__body-inner">
-      <p class="form-heading"><%= t("todo_lists.new_heading") %></p>
-      <%= render 'form', todo_list: @todo_list, cancel_path: todo_lists_path %>
-    </div>
-  </div>
+<%= turbo_frame_tag "new_todo_list_modal" do %>
+  <p class="modal__title"><%= t("todo_lists.new_heading") %></p>
+  <%= render 'form', todo_list: @todo_list, cancel_path: nil, modal_cancel: true %>
 <% end %>

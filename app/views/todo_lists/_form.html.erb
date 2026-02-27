@@ -1,4 +1,5 @@
 <% cancel_path ||= nil %>
+<% modal_cancel ||= false %>
 <%= form_with model: todo_list do |form| %>
   <% if todo_list.errors.any? %>
     <div class="field-errors">
@@ -16,6 +17,10 @@
       <%= form.submit t("ui.save"), class: "btn btn--primary btn--icon" %>
       <% if cancel_path %>
         <%= link_to t("ui.cancel"), cancel_path, class: "btn btn--ghost btn--icon" %>
+      <% elsif modal_cancel %>
+        <button type="button" class="btn btn--ghost btn--icon" data-action="modal#close">
+          <%= t("ui.cancel") %>
+        </button>
       <% end %>
     </div>
   </div>

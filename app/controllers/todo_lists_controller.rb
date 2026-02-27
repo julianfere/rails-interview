@@ -45,7 +45,6 @@ class TodoListsController < ApplicationController
           @pagy, _lists = pagy(TodoList.order(:id), items: LISTS_PER_PAGE)
           render turbo_stream: [
             turbo_stream.append("todo_lists", partial: "todo_list", locals: { todo_list: @todo_list }),
-            turbo_stream.update("new_todo_list", partial: "todo_lists/new_list_trigger"),
             turbo_stream.replace("load_more_lists",
               partial: "todo_lists/load_more_lists",
               locals: { pagy: @pagy }),

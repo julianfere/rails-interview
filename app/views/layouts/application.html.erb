@@ -12,8 +12,19 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
+  <body data-controller="modal">
     <div id="toast_container" class="toast-container" aria-live="polite"></div>
+
+    <dialog id="new_list_modal" class="modal"
+            data-modal-target="dialog"
+            data-action="click->modal#backdropClick">
+      <div class="modal__content">
+        <%= turbo_frame_tag "new_todo_list_modal",
+              data: { action: "turbo:submit-end->modal#onSubmitEnd" } do %>
+        <% end %>
+      </div>
+    </dialog>
+
     <div class="page">
       <%= yield %>
     </div>

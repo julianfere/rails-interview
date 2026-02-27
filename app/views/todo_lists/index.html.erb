@@ -1,8 +1,11 @@
 <header class="page-header">
   <h1 class="page-header__title">Todo<span>Flow</span></h1>
-  <%= turbo_frame_tag "new_todo_list" do %>
-    <%= render "new_list_trigger" %>
-  <% end %>
+  <%= link_to t("todo_lists.new_list"), new_todo_list_path,
+        class: "btn btn--ghost",
+        data: {
+          turbo_frame: "new_todo_list_modal",
+          action: "click->modal#open"
+        } %>
 </header>
 
 <div id="todo_lists" class="card-list">
@@ -11,7 +14,7 @@
       <p class="grid-empty-state__title"><%= t("todo_lists.empty_state_title") %></p>
       <p class="grid-empty-state__subtitle"><%= t("todo_lists.empty_state_subtitle") %></p>
       <%= link_to t("todo_lists.new_list"), new_todo_list_path, class: "btn btn--primary",
-            data: { turbo_frame: "new_todo_list" } %>
+            data: { turbo_frame: "new_todo_list_modal", action: "click->modal#open" } %>
     </div>
   <% else %>
     <%= render "todo_list_collection", todo_lists: @todo_lists %>
